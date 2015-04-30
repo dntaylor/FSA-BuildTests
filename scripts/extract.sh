@@ -33,9 +33,8 @@ export CMSSW_GIT_REFERENCE=/scratch/jenkins/.cmsgit-cache
 # setup previous build
 tar zxf fsa_build.tar.gz
 cd $CMSSW_RELEASE/src
-cmsenv
 scram b ProjectRename
-cmsenv
+eval `scramv1 runtime -sh`
 source $CMSSW_BASE/src/FinalStateAnalysis/environment.sh
 export USER_CXXFLAGS="-Wno-delete-non-virtual-dtor -Wno-error=unused-but-set-variable -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=reorder"
 cd $WORKSPACE
