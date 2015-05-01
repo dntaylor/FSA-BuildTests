@@ -15,6 +15,7 @@ import sys
 import errno
 import argparse
 import shutil
+import re
 
 sys.argv.append('b')
 import ROOT as rt
@@ -26,6 +27,36 @@ rt.gStyle.SetOptStat(0)
 rt.gErrorIgnoreLevel = rt.kWarning
 
 canvas = rt.TCanvas("asdf", "adsf", 800, 600)
+
+from variableParameters import *
+
+mapVariables = {
+  'e': electronVariables,
+  'm': muonVariables,
+  't': tauVariables,
+  'g': photonVariables,
+  'j': jetVariables,
+}
+
+def getParameters(variable):
+    '''Function to match variable to available parameters'''
+    # first check event
+    if variable in eventVariables: return eventVariables[variable]
+    # next check for candidates
+    v = re.sub('[emtgj]\d?','object',variable,1)
+    if v in candidateVariables: return candidateVariables[v]
+    if variable[0] in 'emtgj':
+        if v in mapVariables[variable[0]]: return mapVariables[variable[0]][v]
+        if v in extraJetVariables: return extraJetVariables[v]
+    # finally, dicandidate variables
+    vs = variable.split('_')
+    if len(vs)>2:
+        vs[0] = 'object1'
+        vs[1] = 'object2'
+        v = '_'.join(vs)
+        if v in dicandidateVariables: return dicandidateVariables[v]
+    # not there
+    return []
 
 def python_mkdir(dir):
     '''A function to make a unix directory as well as subdirectories'''
@@ -79,9 +110,16 @@ def compare_ntuples(newNtuple,oldNtuple,**kwargs):
         for variable in variables:
             newName = 'hNew%s%s' % (chan, variable)
             oldName = 'hOld%s%s' % (chan, variable)
-            newTree.Draw('%s>>%s' % (variable, newName))
+            binning = getParameters(variable)
+            if len(binning)==3:
+                newDrawString = '%s>>%s(%s)' % (variable,newName,','.join(str(x) for x in binning))
+                oldDrawString = '%s>>%s(%s)' % (variable,oldName,','.join(str(x) for x in binning))
+            else:
+                newDrawString = '%s>>%s' % (variable,newName)
+                oldDrawString = '%s>>%s' % (variable,oldName)
+            newTree.Draw(newDrawString)
             newHist = rt.gDirectory.Get(newName)
-            oldTree.Draw('%s>>%s' % (variable, oldName))
+            oldTree.Draw(oldDrawString)
             oldHist = rt.gDirectory.Get(oldName)
             pValue = newHist.Chi2Test(oldHist)
             chi2 = newHist.Chi2Test(oldHist,'CHI2')
