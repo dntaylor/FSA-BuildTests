@@ -10,7 +10,7 @@ from github import Github
 #######################################
 token             = os.environ.get('GITTOKEN')                     # custom variable for git token
 #pullId            = os.environ.get('ghprbPullId')                  # the pull request number
-pullId            = os.environ.get('FSA_PR')                       # the pull request number
+pullId            = int(os.environ.get('FSA_PR'))                  # the pull request number
 dqmUrl            = os.environ.get('BUILD_URL')                    # jenkins url for dqm information
 buildUrl          = os.environ.get('FSA_BUILD_URL')                # jenkins url for build information
 #pullUrl           = os.environ.get('ghprbPullLink')                # url to pull request
@@ -25,8 +25,8 @@ commitId          = os.environ.get('FSA_COMMIT')                   # the actual 
 gitUrl            = os.environ.get('FSA_URL')                      # url to git for FSA
 #commitAuthor      = os.environ.get('ghprbActualCommitAuthor')      # the real commit author
 #branchTarget      = os.environ.get('ghprbTargetBranch')            # the branch you want to merge into
-dqmBuildNumber       = os.environ.get('BUILD_NUMBER')              # the number of the build
-fsaBuildNumber       = os.environ.get('FSA_BUILD_NUMBER')          # the number of the build
+dqmBuildNumber    = int(os.environ.get('BUILD_NUMBER'))         # the number of the build
+fsaBuildNumber    = int(os.environ.get('FSA_BUILD_NUMBER'))     # the number of the build
 
 username, reponame = gitUrl.split(':')[1].split('.')[0].split('/')
 
