@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import argparse
 from gitUtilities import *
 
 def parse_command_line(argv):
