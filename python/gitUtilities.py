@@ -9,19 +9,24 @@ from github import Github
 ### Available environment variables ###
 #######################################
 token             = os.environ.get('GITTOKEN')                     # custom variable for git token
-pullId            = os.environ.get('ghprbPullId')                  # the pull request number
-buildUrl          = os.environ.get('BUILD_URL')                    # jenkins url for build information
-pullUrl           = os.environ.get('ghprbPullLink')                # url to pull request
-branchSource      = os.environ.get('ghprbSourceBranch')            # branch that wants to merge
-commitAutherEmail = os.environ.get('ghprbActualCommitAuthorEmail') # email address of commit
-mergeCommitId     = os.environ.get('GIT_COMMIT')                   # git commit (not the actualy one, the merge)
-branchTest        = os.environ.get('sha1')                         # the branch to test name, the merge of the pr with the target
+#pullId            = os.environ.get('ghprbPullId')                  # the pull request number
+pullId            = os.environ.get('FSA_PR')                       # the pull request number
+dqmUrl            = os.environ.get('BUILD_URL')                    # jenkins url for dqm information
+buildUrl          = os.environ.get('FSA_BUILD_URL')                # jenkins url for build information
+#pullUrl           = os.environ.get('ghprbPullLink')                # url to pull request
+#branchSource      = os.environ.get('ghprbSourceBranch')            # branch that wants to merge
+#commitAutherEmail = os.environ.get('ghprbActualCommitAuthorEmail') # email address of commit
+#mergeCommitId     = os.environ.get('GIT_COMMIT')                   # git commit (not the actualy one, the merge)
+#branchTest        = os.environ.get('sha1')                         # the branch to test name, the merge of the pr with the target
 jenkinsUrl        = os.environ.get('JENKINS_URL')                  # jenkins url
-commitId          = os.environ.get('ghprbActualCommit')            # the actual commit
-gitUrl            = os.environ.get('GIT_URL')                      # url to git
-commitAuthor      = os.environ.get('ghprbActualCommitAuthor')      # the real commit author
-branchTarget      = os.environ.get('ghprbTargetBranch')            # the branch you want to merge into
-buildNumber       = os.environ.get('BUILD_NUMBER')                 # the number of the build
+#commitId          = os.environ.get('ghprbActualCommit')            # the actual commit
+commitId          = os.environ.get('FSA_COMMIT')                   # the actual commit for FSA
+#gitUrl            = os.environ.get('GIT_URL')                      # url to git
+gitUrl            = os.environ.get('FSA_URL')                      # url to git for FSA
+#commitAuthor      = os.environ.get('ghprbActualCommitAuthor')      # the real commit author
+#branchTarget      = os.environ.get('ghprbTargetBranch')            # the branch you want to merge into
+dqmBuildNumber       = os.environ.get('BUILD_NUMBER')              # the number of the build
+fsaBuildNumber       = os.environ.get('FSA_BUILD_NUMBER')          # the number of the build
 
 username, reponame = gitUrl.split(':')[1].split('.')[0].split('/')
 
