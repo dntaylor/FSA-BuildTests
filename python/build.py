@@ -12,9 +12,10 @@ import logging
 import subprocess
 
 from comparisons import tests
+from comparisons import watchedVariables
 
 def execute(command):
-    process = subprocess.Popen(command, shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+    process = addProcess(command)
     lines_iterator = iter(process.stdout.readline, b"")
     for line in lines_iterator:
         sys.stdout.write(line)
@@ -22,20 +23,16 @@ def execute(command):
     result = process.returncode
     return result
 
+def addProcess(command):
+    process = subprocess.Popen(command, shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+    return process
+
 def checkout(branch,name='FinalStateAnalysis'):
     command = 'git clone --recursive -b {0} https://github.com/uwcms/FinalStateAnalysis.git {1}'.format(branch,name)
     return execute(command)
 
 def build(fsaDirectory,cmsswRelease,scramArch,name):
     command = ''
-    command += 'export CMS="/cvmfs/cms.cern.ch"\n'
-    command += 'export VO_CMS_SW_DIR=$CMS\n'
-    command += 'export LCG_GFAL_INFOSYS=exp-bdii.cern.ch:2170\n'
-    command += 'export CMSSW_MIRROR=http://mirror.hep.wisc.edu/upstream/cmssw.git/\n'
-    command += 'source ${CMS}/cmsset_default.sh\n'
-    command += 'alias scram=scramv1\n'
-    #command += 'export CMSSW_GIT_REFERENCE=/scratch/jenkins/.cmsgit-cache\n'
-    command += 'export CMSSW_GIT_REFERENCE=/nfs_scratch/dntaylor/.cmsgit-cache\n'
     command += 'export SCRAM_ARCH={0}\n'.format(scramArch)
     command += 'scram pro -n {0} CMSSW {1}\n'.format(name,cmsswRelease)
     command += 'pushd {0}/src\n'.format(name)
@@ -51,7 +48,35 @@ def build(fsaDirectory,cmsswRelease,scramArch,name):
     command += 'popd\n'
     return execute(command)
 
-def compare(originalCmssw,updatedCmssw,testname,arguments):
+def cmsenv(cmsswBase):
+    command = ''
+    command += 'pushd {0}/src\n'.format(cmsswBase)
+    command += 'cmsenv\n'
+    return command
+
+def compare(testDirectory,originalCmssw,updatedCmssw,testname,arguments):
+    # run tests
+    originalCommand = cmsenv(originalCmssw)
+    updatedCommand = cmsenv(updatedCmssw)
+    originalTest = '{0} {1}/{2} {3}\n'.format(arguments['command'],originalCmssw,arguments['config'],' '.join(['{0}={1}'.format(x,arguments['arguments'][x]) for x in arguments['arguments']]))
+    updatedTest = '{0} {1}/{2} {3}\n'.format(arguments['command'],updatedCmssw,arguments['config'],' '.join(['{0}={1}'.format(x,arguments['arguments'][x]) for x in arguments['arguments']]))
+    originalCommand += originalTest
+    updatedCommand += updatedTest
+    originalProcess = addProcess(originalCommand)
+    updatedProcess = addProcess(updatedCommand)
+    originalOut = originalProcess.communicate()[0]
+    updatedOut = originalProcess.communicate()[0]
+    originalReturn = originalProcess.returncode
+    updatedReturn = updatedProcess.returncode
+    if originalReturn: return originalReturn
+    if updatedReturn: return updatedReturn
+    # verify files exist
+    originalOutput = '{0}/{1}'.format(originalCmssw,arguments['output'])
+    updatedOutput = '{0}/{1}'.format(updatedCmssw,arguments['output'])
+    if not os.path.isfile(orginalOutput): return 1
+    if not os.path.isfile(updatedOutput): return 1
+    # run dqm comparison
+    resultsDirectory = '{0}/{1}'.format(testDirectory,testname)
     return 0
 
 def parse_command_line(argv):
@@ -98,9 +123,10 @@ def main(argv=None):
        build(originalFsaDirectory,cmsswRelease,scramArch,originalName)
 
        # run comparisons
+       testDirectory = '$WORKSPACE'
        for test in tests:
            testParams = tests[test]
-           compare(originalCmssw,updatedCmssw,test,testParams)
+           compare(testDirectory,originalCmssw,updatedCmssw,test,testParams)
 
        # set statuses
 

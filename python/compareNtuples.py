@@ -5,7 +5,7 @@ compareNtuples.py
 Script to compare two histograms.
 
 Usage:
-    ./compareNtuples [-h] new_ntuple.root old_ntuple.roo
+    ./compareNtuples [-h] new_ntuple.root old_ntuple.root
 
 Author: Devin N. Taylor, UW-Madison
 '''
