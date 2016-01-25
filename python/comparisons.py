@@ -151,7 +151,7 @@ watchedVariables = {
             'objectRelPFIsoDBDefault',
         ],
 
-    ],
+    },
 
 }
 
