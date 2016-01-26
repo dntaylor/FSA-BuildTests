@@ -36,7 +36,7 @@ def build(fsaDirectory,cmsswRelease,scramArch,name):
     command += 'export SCRAM_ARCH={0}\n'.format(scramArch)
     command += 'scram pro -n {0} CMSSW {1}\n'.format(name,cmsswRelease)
     command += 'pushd {0}/src\n'.format(name)
-    command += 'cmsenv\n'
+    command += 'eval `scramv1 runtime -sh`\n'
     command += 'git cms-init\n'
     command += 'mv {0} FinalStateAnalysis\n'.format(fsaDirectory)
     command += 'pushd FinalStateAnalysis/recipe\n'
@@ -51,7 +51,7 @@ def build(fsaDirectory,cmsswRelease,scramArch,name):
 def cmsenv(cmsswBase):
     command = ''
     command += 'pushd {0}/src\n'.format(cmsswBase)
-    command += 'cmsenv\n'
+    command += 'eval `scramv1 runtime -sh`\n'
     return command
 
 def compare(testDirectory,originalCmssw,updatedCmssw,testname,arguments):
