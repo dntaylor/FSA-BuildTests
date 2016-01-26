@@ -81,8 +81,7 @@ def compare(testDirectory,originalCmssw,updatedCmssw,testname,arguments):
     if not os.path.isfile(orginalOutput): return 1
     if not os.path.isfile(updatedOutput): return 1
     # run dqm comparison
-    resultsDirectory = '{0}/{1}'.format(testDirectory,testname)
-    compare_ntuples(updatedOutput,originalOutput,savedir=resultsDirectory)
+    compare_ntuples(updatedOutput,originalOutput,savedir=testDirectory)
     return 0
 
 def parse_command_line(argv):
@@ -129,14 +128,13 @@ def main(argv=None):
        build(originalFsaDirectory,cmsswRelease,scramArch,originalName)
 
        # run comparisons
-       testDirectory = '$WORKSPACE'
-       # setup html
        htmlTemplate = '$WORKSPACE/FSA-BuildTests/www'
        htmlDir = '$WORKSPACE/www'
        execute('cp -r {0} {1}'.format(htmlTemplate,htmlDir))
        for test in tests:
            testParams = tests[test]
-           compare(testDirectory,originalCmssw,updatedCmssw,test,testParams)
+           testDir = '{0}/{1}'.format(htmlDir,test)
+           compare(testDir,originalCmssw,updatedCmssw,test,testParams)
 
        # set statuses
 
