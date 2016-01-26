@@ -32,7 +32,7 @@ def checkout(branch,name='FinalStateAnalysis'):
     return execute(command)
 
 def build(fsaDirectory,cmsswRelease,scramArch,name):
-    nproc = execute('nproc').communicate()[0].strip()
+    nproc = addProcess('nproc').communicate()[0].strip()
     command = 'printenv;'
     command += 'export SCRAM_ARCH={0}\n'.format(scramArch)
     command += 'scram pro -n {0} CMSSW {1}\n'.format(name,cmsswRelease)
