@@ -74,7 +74,9 @@ def compare_ntuples(newNtuple,oldNtuple,**kwargs):
     arguments:
         Variable      Type (default)   Description
         doBinByBin    bool (False)     Do bin-by-bin comparison
+        savedir       string (DQM)     directory to save output histograms
     '''
+    savedir = kwargs.pop('savedir','DQM')
     newFile = rt.TFile(newNtuple)
     oldFile = rt.TFile(oldNtuple)
     newChannels = [key.GetTitle() for key in newFile.GetListOfKeys()]
@@ -89,10 +91,7 @@ def compare_ntuples(newNtuple,oldNtuple,**kwargs):
         if chan not in oldChannels:
             print 'Channel %s was not found in old ntuple.' % chan
     for chan in channels:
-        savedir = 'DQM/all/%s' % chan
         python_mkdir(savedir)
-        faildir = 'DQM/fail/%s' % chan
-        python_mkdir(faildir)
         newTree = newFile.Get('%s/final/Ntuple' % chan)
         oldTree = oldFile.Get('%s/final/Ntuple' % chan)
         print 'Comparing channel %s' % chan
@@ -124,9 +123,10 @@ def compare_ntuples(newNtuple,oldNtuple,**kwargs):
             pValue = newHist.Chi2Test(oldHist)
             chi2 = newHist.Chi2Test(oldHist,'CHI2')
             plot_hist(newHist,oldHist,'%s/%s.png' % (savedir,variable))
-            if chi2:
+            if not chi2:
+                os.system('rm %s/%s.png' % (savedir,variable))
+            else:
                 print '%s:%s: p-value = %0.3f, chi2 = %0.3f' % (chan, variable, pValue, chi2)
-                shutil.copyfile('%s/%s.png' (savedir,variable), '%s/%s.png' % (faildir,variable))
 
 def plot_hist(newHist,oldHist,savename):
     '''Plot a histogram with ratios.'''

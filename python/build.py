@@ -11,8 +11,8 @@ import argparse
 import logging
 import subprocess
 
-from comparisons import tests
-from comparisons import watchedVariables
+from comparisons import tests, watchedVariables
+from compareNtuples import compare_ntuple
 
 def execute(command):
     process = addProcess(command)
@@ -82,6 +82,7 @@ def compare(testDirectory,originalCmssw,updatedCmssw,testname,arguments):
     if not os.path.isfile(updatedOutput): return 1
     # run dqm comparison
     resultsDirectory = '{0}/{1}'.format(testDirectory,testname)
+    compare_ntuples(updatedOutput,originalOutput,savedir=resultsDirectory)
     return 0
 
 def parse_command_line(argv):
