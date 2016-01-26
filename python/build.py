@@ -66,7 +66,11 @@ def compare(testDirectory,originalCmssw,updatedCmssw,testname,arguments):
     originalProcess = addProcess(originalCommand)
     updatedProcess = addProcess(updatedCommand)
     originalOut = originalProcess.communicate()[0]
-    updatedOut = originalProcess.communicate()[0]
+    print originalCommand
+    print originalOut
+    updatedOut = updatedProcess.communicate()[0]
+    print updatedCommand
+    print updatedOut
     originalReturn = originalProcess.returncode
     updatedReturn = updatedProcess.returncode
     if originalReturn: return originalReturn
