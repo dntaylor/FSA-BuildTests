@@ -32,6 +32,7 @@ def checkout(branch,name='FinalStateAnalysis'):
     return execute(command)
 
 def build(fsaDirectory,cmsswRelease,scramArch,name):
+    nproc = execute('nproc').communicate()[0].strip()
     command = 'printenv;'
     command += 'export SCRAM_ARCH={0}\n'.format(scramArch)
     command += 'scram pro -n {0} CMSSW {1}\n'.format(name,cmsswRelease)
@@ -44,7 +45,7 @@ def build(fsaDirectory,cmsswRelease,scramArch,name):
     command += './recipe.sh\n'
     command += 'popd\n'
     command += 'export USER_CXXFLAGS="-Wno-delete-non-virtual-dtor -Wno-error=unused-but-set-variable -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=reorder"\n'
-    command += 'nice scram b -j 16\n'
+    command += 'nice scram b -j {0}\n'.format(int(int(nproc)/2.)+1)
     command += 'popd\n'
     return execute(command)
 
