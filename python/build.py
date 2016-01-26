@@ -32,7 +32,7 @@ def checkout(branch,name='FinalStateAnalysis'):
     return execute(command)
 
 def build(fsaDirectory,cmsswRelease,scramArch,name):
-    command = ''
+    command = 'printenv;'
     command += 'export SCRAM_ARCH={0}\n'.format(scramArch)
     command += 'scram pro -n {0} CMSSW {1}\n'.format(name,cmsswRelease)
     command += 'pushd {0}/src\n'.format(name)
@@ -124,6 +124,10 @@ def main(argv=None):
 
        # run comparisons
        testDirectory = '$WORKSPACE'
+       # setup html
+       htmlTemplate = '$WORKSPACE/FSA-BuildTests/www'
+       htmlDir = '$WORKSPACE/www'
+       execute('cp -r {0} {1}'.format(htmlTemplate,htmlDir))
        for test in tests:
            testParams = tests[test]
            compare(testDirectory,originalCmssw,updatedCmssw,test,testParams)
