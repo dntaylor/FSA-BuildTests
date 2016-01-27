@@ -14,7 +14,6 @@ import subprocess
 from comparisons import tests, watchedVariables
 
 def execute(command):
-    print command
     process = addProcess(command)
     lines_iterator = iter(process.stdout.readline, b"")
     for line in lines_iterator:
@@ -77,13 +76,12 @@ def compare(testDirectory,originalCmssw,updatedCmssw,testname,arguments):
     #if originalReturn: return originalReturn
     #if updatedReturn: return updatedReturn
     # verify files exist
+    print 'verifying file exists'
     originalOutput = '{0}/{1}'.format(originalCmssw,arguments['output'])
     updatedOutput = '{0}/{1}'.format(updatedCmssw,arguments['output'])
-    if not os.path.isfile(originalOutput): return 1
-    if not os.path.isfile(updatedOutput): return 1
     # run dqm comparison
     command = cmsenv(updatedCmssw)
-    command += './$WORKSPACE/FSA-BuildTests/python/compareNtuples.py {0} {1} --directory {2}\n'.format(updatedOutput,originalOutput,testDirectory)
+    command += '$WORKSPACE/FSA-BuildTests/python/compareNtuples.py {0} {1} --directory {2}\n'.format(updatedOutput,originalOutput,testDirectory)
     execute(command)
     return 0
 
@@ -137,7 +135,7 @@ def main(argv=None):
        # run comparisons
        htmlTemplate = '$WORKSPACE/FSA-BuildTests/www'
        htmlDir = '$WORKSPACE/www'
-       execute('cp -r {0} {1}'.format(htmlTemplate,htmlDir))
+       execute('cp -r {0} $WORKSPACE'.format(htmlTemplate,htmlDir))
        for test in tests:
            testParams = tests[test]
            if args.comparisonBranch not in testParams['target']: continue
