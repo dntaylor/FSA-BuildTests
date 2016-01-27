@@ -17,16 +17,13 @@ import argparse
 import shutil
 import re
 
-sys.argv.append('b')
 import ROOT as rt
-sys.argv.pop()
 
+rt.gROOT.SetBatch(rt.kTRUE)
+rt.gROOT.ProcessLine("gErrorIgnoreLevel = 1001;")
 rt.gROOT.SetStyle("Plain")
-rt.gROOT.SetBatch(True)
 rt.gStyle.SetOptStat(0)
-rt.gErrorIgnoreLevel = rt.kWarning
 
-canvas = rt.TCanvas("asdf", "adsf", 800, 600)
 
 from variableParameters import *
 
@@ -73,7 +70,6 @@ def compare_ntuples(newNtuple,oldNtuple,**kwargs):
     Create histograms for each entry in the ntuple. Report differences and missing entries.
     arguments:
         Variable      Type (default)   Description
-        doBinByBin    bool (False)     Do bin-by-bin comparison
         savedir       string (DQM)     directory to save output histograms
     '''
     savedir = kwargs.pop('savedir','DQM')
@@ -122,38 +118,68 @@ def compare_ntuples(newNtuple,oldNtuple,**kwargs):
             oldHist = rt.gDirectory.Get(oldName)
             pValue = newHist.Chi2Test(oldHist)
             chi2 = newHist.Chi2Test(oldHist,'CHI2')
-            plot_hist(newHist,oldHist,'%s/%s.png' % (savedir,variable))
+            plot_hist(newHist,oldHist,'%s/%s_%s.png' % (savedir,chan,variable))
             if not chi2:
-                os.system('rm %s/%s.png' % (savedir,variable))
+                os.system('rm %s/%s_%s.png' % (savedir,chan,variable))
             else:
                 print '%s:%s: p-value = %0.3f, chi2 = %0.3f' % (chan, variable, pValue, chi2)
 
 def plot_hist(newHist,oldHist,savename):
     '''Plot a histogram with ratios.'''
-    ratio = newHist.Clone('%sRatio' % newHist.GetTitle())
-    ratio.Sumw2()
-    ratio.SetMarkerSize(0.8)
-    ratio.Divide(newHist,oldHist,1.,1.,'')
 
-    histpad = rt.TPad('histPad', 'top pad', 0.0, 0.21, 1.0, 1.0)
-    histpad.Draw()
-    ratiopad = rt.TPad('ratiopad', 'bottom pad', 0.0, 0.0, 1.0, 0.21)
-    ratiopad.SetTopMargin(0.)
-    ratiopad.SetBottomMargin(0.5)
-    ratiopad.SetFillColor(0)
-    ratiopad.Draw()
+    canvasname = 'c_' + savename.replace('.','_')
 
-    histpad.cd()
+    rt.gStyle.SetOptTitle(0)
 
+    canvas = rt.TCanvas(canvasname, canvasname, 800, 600)
+    canvas.SetGrid()
+    canvas.SetTopMargin(0.12)
+    canvas.SetLeftMargin(0.06)
+    canvas.SetRightMargin(0.01)
+    canvas.SetBottomMargin(0.06)
+
+    #ratio = newHist.Clone('%sRatio' % newHist.GetTitle())
+    #ratio.Sumw2()
+    #ratio.SetMarkerSize(0.8)
+    #ratio.Divide(newHist,oldHist,1.,1.,'')
+
+    #histpad = rt.TPad('histPad', 'top pad', 0.0, 0.21, 1.0, 1.0)
+    #histpad.SetLeftMargin(0.06)
+    #histpad.SetRightMargin(0.01)
+    #histpad.SetTopMargin(0.0875)
+    #histpad.SetBottomMargin(0.06)
+    #histpad.SetTickx(1)
+    #histpad.SetTicky(1)
+    #histpad.Draw()
+    #ratiopad = rt.TPad('ratiopad', 'bottom pad', 0.0, 0.0, 1.0, 0.21)
+    #ratiopad.SetTopMargin(0.)
+    #ratiopad.SetBottomMargin(0.5)
+    #ratiopad.SetLeftMargin(0.06)
+    #ratiopad.SetRightMargin(0.01)
+    #ratiopad.SetFillColor(0)
+    #ratiopad.SetTickx(1)
+    #ratiopad.SetTicky(1)
+    #ratiopad.Draw()
+
+    #histpad.cd()
+
+    oldHist.SetLineColor(1)
     oldHist.Draw('hist')
-    newHist.Draw('esamex0')
+    newHist.SetLineColor(2)
+    newHist.Draw('hist same')
 
-    ratiopad.cd()
+    legend = rt.TLegend(0.72,0.89,0.99,0.93)
+    legend.SetNColumns(2)
+    legend.AddEntry(oldHist,'Ref.','l')
+    legend.AddEntry(newHist,'New','l')
+    legend.Draw()
 
-    ratiounity = rt.TLine(oldHist.GetXaxis().GetXmin(),1,oldHist.GetXaxis().GetXmax(),1)
-    ratiounity.SetLineStyle(2)
-    ratio.Draw('e')
-    ratiounity.Draw('same')
+    #ratiopad.cd()
+
+    #ratiounity = rt.TLine(oldHist.GetXaxis().GetXmin(),1,oldHist.GetXaxis().GetXmax(),1)
+    #ratiounity.SetLineStyle(2)
+    #ratio.Draw('e')
+    #ratiounity.Draw('same')
 
     canvas.cd()
 
@@ -166,7 +192,7 @@ def parse_command_line(argv):
 
     parser.add_argument('newNtuple', type=str, help='New ntuple for comparison.')
     parser.add_argument('oldNtuple', type=str, help='Old ntuple for comparison.')
-    parser.add_argument('-db','--doBinByBin',action='store_true',help='Do bin-by-bin comparison')
+    parser.add_argument('-d','--directory',nargs='?',type=str,const='',help='Output save directory')
 
     args = parser.parse_args(argv)
     return args
@@ -176,7 +202,7 @@ def main(argv=None):
         argv = sys.argv[1:]
     args = parse_command_line(argv)
 
-    compare_ntuples(args.newNtuple,args.oldNtuple,doBinByBin=args.doBinByBin)
+    compare_ntuples(args.newNtuple,args.oldNtuple,savedir=args.directory)
 
     return 0
 

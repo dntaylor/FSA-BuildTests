@@ -54,7 +54,7 @@ tests = {
             'channels'  : 'dqm',            
             'isMC'      : 1,
             'maxEvents' : 1000,
-            'inputFiles': '/store/mc/RunIIFall15MiniAODv1/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-scaledown-pythia8/MINIAODSIM/PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/30000/00A5DDAA-7C9B-E511-930A-90B11C064B50.root',
+            'inputFiles': '/store/mc/RunIIFall15MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext1-v1/60000/28412272-8BC1-E511-BFEE-979AAB9A2051.root',
         },
         'output'    : 'src/ntuplize.root',
     },
