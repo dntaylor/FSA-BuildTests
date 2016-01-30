@@ -27,9 +27,10 @@ tests = {
             'channels'  : 'dqm', 
             'isMC'      : 1,
             'maxEvents' : 1000,
+            'outputFile': 'DQM_MC_74X.root'
             'inputFiles': '/store/mc/RunIISpring15MiniAODv2/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/74X_mcRun2_asymptotic_v2-v3/60000/00181849-176A-E511-8B11-848F69FD4C94.root',
         },
-        'output'    : 'src/ntuplize.root',
+        'output'    : 'src/DQM_MC_74X.root',
     },
     'DQM_Data_74X' : {
         'category'  : 'DQM',
@@ -40,9 +41,10 @@ tests = {
         'arguments' : {
             'channels'  : 'dqm',
             'maxEvents' : 1000,
+            'outputFile': 'DQM_Data_74X.root'
             'inputFiles': '/store/data/Run2015D/MuonEG/MINIAOD/PromptReco-v4/000/258/159/00000/64914E6C-F26B-E511-B0C8-02163E0142D1.root',
         },
-        'output'    : 'src/ntuplize.root',
+        'output'    : 'src/DQM_Data_74X.root',
     },
     'DQM_MC_76X' : {
         'category'  : 'DQM',
@@ -54,9 +56,10 @@ tests = {
             'channels'  : 'dqm',            
             'isMC'      : 1,
             'maxEvents' : 1000,
+            'outputFile': 'DQM_MC_76X.root'
             'inputFiles': '/store/mc/RunIIFall15MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext1-v1/60000/28412272-8BC1-E511-BFEE-979AAB9A2051.root',
         },
-        'output'    : 'src/ntuplize.root',
+        'output'    : 'src/DQM_MC_76X.root',
     },
     'DQM_Data_76X' : {
         'category'  : 'DQM',
@@ -67,9 +70,10 @@ tests = {
         'arguments' : {
             'channels'  : 'dqm',
             'maxEvents' : 1000,
+            'outputFile': 'DQM_Data_76X.root'
             'inputFiles': '/store/data/Run2015D/MuonEG/MINIAOD/16Dec2015-v1/60000/04DA5209-60AB-E511-ACCD-008CFA0A57E8.root',
         },
-        'output'    : 'src/ntuplize.root',
+        'output'    : 'src/DQM_Data_76X.root',
     },
 
 
@@ -87,9 +91,10 @@ tests = {
             'runWZ'     : 1,
             'isMC'      : 1,
             'maxEvents' : 1000,
+            'outputFile': 'WZ_MC_74X.root'
             'inputFiles': '/store/mc/RunIISpring15MiniAODv2/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/MINIAODSIM/74X_mcRun2_asymptotic_v2-v1/50000/023437BD-2D7A-E511-9189-A0369F7FC5BC.root',
         },
-        'output'    : 'src/ntuplize.root',
+        'output'    : 'src/WZ_MC_74X.root',
     },
     'WZ_Data_74X' : {
         'category'  : 'WZ',
@@ -103,9 +108,10 @@ tests = {
             'runWZ'     : 1,
             'runMetFilter': 1,
             'maxEvents' : 1000,
+            'outputFile': 'WZ_Data_74X.root'
             'inputFiles': '/store/data/Run2015D/MuonEG/MINIAOD/PromptReco-v4/000/258/159/00000/64914E6C-F26B-E511-B0C8-02163E0142D1.root',
         },
-        'output'    : 'src/ntuplize.root',
+        'output'    : 'src/WZ_Data_74X.root',
     },
     'WZ_MC_76X' : {
         'category'  : 'WZ',
@@ -119,9 +125,10 @@ tests = {
             'runWZ'     : 1,
             'isMC'      : 1,
             'maxEvents' : 1000,
+            'outputFile': 'WZ_MC_76X.root'
             'inputFiles': '/store/mc/RunIIFall15MiniAODv2/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/MINIAODSIM/PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/10000/022EC2EB-90B8-E511-AED0-0026B937D37D.root',
         },
-        'output'    : 'src/ntuplize.root',
+        'output'    : 'src/WZ_MC_76X.root',
     },
     'WZ_Data_76X' : {
         'category'  : 'WZ',
@@ -135,9 +142,10 @@ tests = {
             'runWZ'     : 1,
             'runMetFilter': 1,
             'maxEvents' : 1000,
+            'outputFile': 'WZ_Data_76X.root'
             'inputFiles': '/store/data/Run2015D/MuonEG/MINIAOD/16Dec2015-v1/60000/04DA5209-60AB-E511-ACCD-008CFA0A57E8.root',
         },
-        'output'    : 'src/ntuplize.root',
+        'output'    : 'src/WZ_Data_76X.root',
     },
 
 }
